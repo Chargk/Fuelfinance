@@ -1,24 +1,27 @@
 const { EntitySchema } = require('typeorm');
 
-const TransactionSchema = new EntitySchema({
-    name: 'Transaction',
-    tableName: 'transactions',
-    columns: {
-        id: {
-            type: 'int',
-            primary: true,
-            generated: true
-        },
-        account: {
-            type: 'varchar',
-        },
-        amount: {
-            type: 'float',
-        },
-        date: {
-            type: 'date',
-        }
-    }
+module.exports = new EntitySchema({
+  name: 'Transaction',
+  columns: {
+    id: {
+      type: 'int',
+      primary: true,
+      generated: true,
+    },
+    date: {
+      type: 'date',
+    },
+    plAccount: {
+      type: 'varchar',
+    },
+    amount: {
+      type: 'decimal',
+    },
+    description: {
+      type: 'varchar',
+    },
+    counterparty: {
+      type: 'varchar',
+    },
+  },
 });
-
-module.exports = TransactionSchema;

@@ -1,30 +1,25 @@
 const express = require('express');
-const { DataSource } = require('typeorm');
+const AppDataSource = require('./data-source');
+const Transaction = require('./src/entity/Transaction');
 
 const app = express();
 const port = 3000;
 
-const AppDataSource = new DataSource({
-    type: 'postgres', 
-    host: 'localhost',
-    port: 5432,
-    username: 'postgres', 
-    password: '1111', 
-    database: 'fuelfinance_database', 
-    entities: [__dirname + '/entity/*.js'], 
-    synchronize: true,
-});
-
-
 AppDataSource.initialize().then(() => {
-    console.log("Connect");
+    console.log("Connected to the database");
+
     app.get('/', (req, res) => {
-    res.send('Hello World!');
-});
+        res.send('Hello World!');
+    });
 
-app.listen(port, () => {
-    console.log('Server is runninng on http:localhost:${port}')
-});
+    app.get('/api/transactions', async (req, res) => {
+        const transactionRepository = AppDataSource.getRepository(Transaction);
+        const transactions = await transactionRepository.find();
+        res.json(transactions);
+    });
 
-}).catch(error => console.log("Database connect error: ", error));
+    app.listen(port, () => {
+        console.log(`Server is running on http://localhost:${port}`);
+    });
 
+}).catch(error => console.log("Database connection error:", error));
